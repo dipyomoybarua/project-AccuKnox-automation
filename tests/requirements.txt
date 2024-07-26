@@ -3,3 +3,5 @@ pytest
 pytest-html
 pytest-xdist
 coverage
+retrying
+pyautogui

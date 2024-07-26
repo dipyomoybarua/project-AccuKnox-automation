@@ -1,4 +1,3 @@
-# tests/utils/k8s_utils.py
 import subprocess
 import time
 import pytest
