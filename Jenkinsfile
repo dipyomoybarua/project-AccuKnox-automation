@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GITHUB_CREDENTIALS = 'github-credentials-id'
-        PYTHONPATH = "${env.WORKSPACE}"
+        PYTHONPATH = "${env.WORKSPACE}" // Ensure PYTHONPATH includes the workspace directory
     }
 
     stages {
@@ -12,10 +12,10 @@ pipeline {
                 git credentialsId: env.GITHUB_CREDENTIALS, url: 'https://github.com/dipyomoybarua/project-AccuKnox-automation.git'
             }
         }
+
         stage('Set up Python Environment') {
             steps {
                 script {
-                    // Install dependencies using a Python virtual environment
                     bat '''
                         python -m venv venv
                         call venv\\Scripts\\activate
@@ -26,6 +26,7 @@ pipeline {
                 }
             }
         }
+
         stage('Verify Deployment Directory') {
             steps {
                 dir('Deployment') {
@@ -33,11 +34,25 @@ pipeline {
                 }
             }
         }
+
+        stage('Set File Permissions') {
+            steps {
+                script {
+                    // Set read permissions for Everyone on the deployment files
+                    bat '''
+                        icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\backend-deployment.yaml" /grant Everyone:(R)
+                        icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\frontend-deployment.yaml" /grant Everyone:(R)
+                    '''
+                }
+            }
+        }
+
         stage('Workspace Path') {
             steps {
                 bat 'echo %WORKSPACE%' // Prints the workspace path
             }
         }
+
         stage('Create Deployment Directory') {
             steps {
                 bat '''
@@ -50,6 +65,7 @@ pipeline {
                 '''
             }
         }
+
         stage('Deploy to Kubernetes') {
             steps {
                 script {
@@ -73,6 +89,7 @@ pipeline {
                 }
             }
         }
+
         stage('Port Forwarding') {
             steps {
                 script {
@@ -89,15 +106,16 @@ pipeline {
                     bat '''
                         for /f "tokens=*" %%i in ('kubectl get pods -l app=frontend -o jsonpath="{.items[0].metadata.name}"') do set FRONTEND_POD=%%i
                         echo Frontend pod is %FRONTEND_POD%
-                        kubectl port-forward %FRONTEND_POD% 8080:8080
+                        start "" cmd /c "kubectl port-forward %FRONTEND_POD% 8080:8080"
 
                         for /f "tokens=*" %%i in ('kubectl get pods -l app=backend -o jsonpath="{.items[0].metadata.name}"') do set BACKEND_POD=%%i
                         echo Backend pod is %BACKEND_POD%
-                        kubectl port-forward %BACKEND_POD% 8081:3000
+                        start "" cmd /c "kubectl port-forward %BACKEND_POD% 8081:3000"
                     '''
                 }
             }
         }
+
         stage('Run Tests') {
             steps {
                 script {
@@ -110,20 +128,26 @@ pipeline {
                 }
             }
         }
+
+        stage('Check log_analyzer.py File') {
+            steps {
+                script {
+                    bat 'dir scripts' // List contents of the scripts directory
+                    bat 'dir scripts\\log_analyzer.py' // Check if log_analyzer.py exists
+                }
+            }
+        }
+
         stage('Run Log Analyzer') {
             steps {
                 script {
-                    // Check if the log_analyzer.py file exists
-                    if (fileExists('scripts/log_analyzer.py')) {
-                        bat '''
-                            call venv\\Scripts\\activate
-                            set PYTHONPATH=%WORKSPACE%
-                            echo Running log analyzer:
-                            python scripts/log_analyzer.py
-                        '''
-                    } else {
-                        error 'log_analyzer.py file does not exist.'
-                    }
+                    // Ensure PYTHONPATH is set for the script execution
+                    bat '''
+                        call venv\\Scripts\\activate
+                        set PYTHONPATH=%WORKSPACE%
+                        echo Running log analyzer:
+                        python scripts\\log_analyzer.py
+                    '''
                 }
             }
         }
@@ -131,7 +155,7 @@ pipeline {
 
     post {
         success {
-            archiveArtifacts artifacts: '**/reports/*', allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/screenshots/*.png', allowEmptyArchive: true
             echo 'Pipeline completed successfully.'
         }
         failure {
