@@ -26,6 +26,30 @@ pipeline {
                 }
             }
         }
+        stage('Verify Deployment Directory') {
+            steps {
+                dir('Deployment') {
+                    bat 'dir' // Lists contents of the Deployment directory
+                }
+            }
+        }
+        stage('Workspace Path') {
+            steps {
+                bat 'echo %WORKSPACE%' // Prints the workspace path
+            }
+        }
+        stage('Create Deployment Directory') {
+            steps {
+                bat '''
+                    if not exist Deployment (
+                        mkdir Deployment
+                        echo Directory created
+                    ) else (
+                        echo Directory already exists
+                    )
+                '''
+            }
+        }
         stage('Deploy to Kubernetes') {
             steps {
                 script {
@@ -37,14 +61,14 @@ pipeline {
                         dir Deployment
                     '''
 
-                    // Check if the Deployment directory exists
-                    if (fileExists('Deployment')) {
+                    // Check if the Deployment directory exists and contains valid files
+                    if (fileExists('Deployment/backend-deployment.yaml') && fileExists('Deployment/frontend-deployment.yaml')) {
                         bat '''
                             echo Applying Kubernetes manifests:
                             kubectl apply -f Deployment/
                         '''
                     } else {
-                        error 'Deployment directory does not exist.'
+                        error 'Deployment directory is empty or does not contain valid Kubernetes manifest files.'
                     }
                 }
             }

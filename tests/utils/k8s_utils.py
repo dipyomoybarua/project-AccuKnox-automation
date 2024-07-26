@@ -12,10 +12,15 @@ def get_pod_name(label_selector, namespace="default"):
     except subprocess.CalledProcessError as e:
         pytest.fail(f"Failed to get pod name: {e.stderr.decode()}")
 
-def port_forward_pod(pod_name, local_port, pod_port, namespace="default"):
-    process = subprocess.Popen(
-        ['kubectl', 'port-forward', pod_name, f'{local_port}:{pod_port}', '-n', namespace],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-    time.sleep(10)  # Increased wait time for port-forward to establish
+def port_forward_pod(pod_name, local_port, remote_port):
+    # Start the port-forward process
+    command = [
+        'kubectl', 'port-forward', pod_name,
+        f'{local_port}:{remote_port}'
+    ]
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Wait a bit to ensure the port-forwarding is set up
+    time.sleep(5)
+    
     return process

@@ -96,13 +96,14 @@ minikube start
 1. Forward the frontend port:
 
     ```bash
-    kubectl port-forward $(kubectl get pods -l app=frontend -o jsonpath="{.items[0].metadata.name}") 8080:8080
+    kubectl port-forward $(kubectl get pods -l app=frontend -o jsonpath="{.items[0].metadata.name}") ${LOCAL_FRONTEND_PORT}:${REMOTE_FRONTEND_PORT}
     ```
 
 2. Forward the backend port:
 
     ```bash
-    kubectl port-forward $(kubectl get pods -l app=backend -o jsonpath="{.items[0].metadata.name}") 8081:3000
+    kubectl port-forward $(kubectl get pods -l app=backend -o jsonpath="{.items[0].metadata.name}") ${LOCAL_BACKEND_PORT}:${REMOTE_BACKEND_PORT}
+
     ```
 
 ## Initiating Automated Tests
