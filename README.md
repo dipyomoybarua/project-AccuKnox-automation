@@ -20,7 +20,7 @@ Our project is neatly organized into folders for clarity:
 - `Deployment/`: This is home to the Kubernetes deployment configurations.
 - `frontend/`: Everything client-facing lives here. The user interface components are developed in this folder.
 - `tests/`: This is the one-stop folder for all testing scripts. It also contains helper utilities.
-- scripts/: Contains scripts for various tasks, including the log analyzer.
+- `scripts/`: Contains scripts for various tasks, including the log analyzer.
 
 ## Kickstarting the Project
 
