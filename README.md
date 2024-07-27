@@ -47,10 +47,10 @@ cd qa-test
     pip install -r requirements.txt
     ```
 
-3. For dynamic screenshots, also run:
+3. For screenshot functionality, install additional packages:
 
     ```bash
-    pip install pyautogui pyscreeze
+    pip install mss
     ```
 
 ## Launching on Kubernetes
@@ -126,7 +126,7 @@ minikube start
 ### Visual Debugging
 
 Our custom utility in `screenshot_utils.py` ensures we've got proof of every test run, integrated into our test scripts.
- This makes for easy reference and troubleshooting.
+This makes for easy reference and troubleshooting.
 
 ### Running the Log Analyzer Script
 
@@ -152,6 +152,27 @@ The log analyzer script helps to analyze log files and summarize useful informat
 ### Handling No Logs or Errors
 
 If no logs are found at the specified URL or if there are errors in fetching the logs, the script will handle it gracefully and take a screenshots.
+
+## Jenkins Pipeline Integration
+
+The Jenkins pipeline automates building deploying and testing our project. Ensure Jenkins is properly configured with necessary plugins and credentials.
+
+### Configuring Jenkins
+
+1. **Create New Pipeline Job**:
+ - Go to Jenkins Dashboard. Click on “New Item” Select “Pipeline” and name it.
+
+2. **Configure Source Code Management**:
+ - Choose “GitHub project” and enter `https://github.com/dipyomoybarua/project-AccuKnox-automation.git`. Add GitHub credentials in `Manage Jenkins` section.
+
+3. **Configure Pipeline**:
+ - Choose “Pipeline script”. Enter the groovy script. Give the `Jenkinsfile` code.
+
+4. **Configure Environment Variables**:
+ - Set necessary environment variables. Examples include `GITHUB_CREDENTIALS`.
+
+5. **Run the Pipeline**:
+ - Save and run the pipeline job.
 
 ## Final Checks
 
