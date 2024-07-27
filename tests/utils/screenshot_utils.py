@@ -1,13 +1,26 @@
+# utils/screenshot_utils.py
+
 import mss
 import datetime
 import os
 
 def take_screenshot(file_name_prefix, directory="screenshots"):
+    """
+    Takes a screenshot and saves it to a specified directory with a timestamp.
+
+    Args:
+        file_name_prefix (str): The prefix for the screenshot file name.
+        directory (str): The directory where the screenshot will be saved.
+    
+    Returns:
+        str: The path to the saved screenshot file.
+    """
+    # Create a timestamp for the screenshot file name
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = f"{file_name_prefix}_{timestamp}.png"
     file_path = os.path.join(directory, file_name)
 
-    # Create screenshots directory if it doesn't exist
+    # Create the directory if it doesn't exist
     if not os.path.exists(directory):
         os.makedirs(directory)
 

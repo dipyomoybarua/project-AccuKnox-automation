@@ -20,7 +20,8 @@ pipeline {
                         python -m venv venv
                         call venv\\Scripts\\activate
                         pip install --upgrade pip
-                        pip install -r requirements.txt
+                        pip install -r tests\\requirements.txt
+                        pip show mss
                     '''
                 }
             }
@@ -38,8 +39,9 @@ pipeline {
             steps {
                 script {
                     bat '''
-                        icacls "Deployment\\backend-deployment.yaml" /grant Everyone:(R)
-                        icacls "Deployment\\frontend-deployment.yaml" /grant Everyone:(R)
+                        icacls "Deployment\\backend-deployment.yaml" /grant Users:(R)
+                        icacls "Deployment\\frontend-deployment.yaml" /grant Users:(R)
+
                     '''
                 }
             }
@@ -118,7 +120,8 @@ pipeline {
                         call venv\\Scripts\\activate
                         set PYTHONPATH=%WORKSPACE%
                         echo Running tests:
-                        pytest -s -v --tb=short
+                        cd %WORKSPACE%
+                        python -m pytest -s -v --tb=short
                     '''
                 }
             }
@@ -140,6 +143,7 @@ pipeline {
                         call venv\\Scripts\\activate
                         set PYTHONPATH=%WORKSPACE%
                         echo Running log analyzer:
+                        cd %WORKSPACE%
                         python scripts\\log_analyzer.py
                     '''
                 }
