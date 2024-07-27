@@ -40,8 +40,8 @@ pipeline {
                 script {
                     // Set read permissions for Everyone on the deployment files
                     bat '''
-                        icacls "Deployment\\backend-deployment.yaml" /grant Everyone:(R)
-                        icacls "Deployment\\frontend-deployment.yaml" /grant Everyone:(R)
+                        icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\backend-deployment.yaml" /grant Everyone:(R)
+                        icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\frontend-deployment.yaml" /grant Everyone:(R)
                     '''
                 }
             }

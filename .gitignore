@@ -8,3 +8,8 @@ screenshots
 # Ignore sensitive or environment-specific files
 .env
 .env.*
+
+# Ignore virtual environment directories
+my_python_project_env/
+venv/
+.venv/
