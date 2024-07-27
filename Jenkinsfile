@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GITHUB_CREDENTIALS = 'github-credentials-id'
-        PYTHONPATH = "${env.WORKSPACE}"
+        PYTHONPATH = "${env.WORKSPACE}" // Ensure PYTHONPATH includes the workspace directory
     }
 
     stages {
@@ -32,7 +32,7 @@ pipeline {
         stage('Verify Deployment Directory') {
             steps {
                 dir('Deployment') {
-                    bat 'dir'
+                    bat 'dir' // Lists contents of the Deployment directory
                 }
             }
         }
@@ -40,6 +40,7 @@ pipeline {
         stage('Set File Permissions') {
             steps {
                 script {
+                    // Set read permissions for Everyone on the deployment files
                     bat '''
                         icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\backend-deployment.yaml" /grant Everyone:(R)
                         icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\frontend-deployment.yaml" /grant Everyone:(R)
@@ -50,7 +51,7 @@ pipeline {
 
         stage('Workspace Path') {
             steps {
-                bat 'echo %WORKSPACE%'
+                bat 'echo %WORKSPACE%' // Prints the workspace path
             }
         }
 
@@ -70,6 +71,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
+                    // Debugging: List directory contents
                     bat '''
                         echo Checking contents of the workspace directory:
                         dir
@@ -77,6 +79,7 @@ pipeline {
                         dir Deployment
                     '''
 
+                    // Check if the Deployment directory exists and contains valid files
                     if (fileExists('Deployment/backend-deployment.yaml') && fileExists('Deployment/frontend-deployment.yaml')) {
                         bat '''
                             echo Applying Kubernetes manifests:
@@ -92,6 +95,16 @@ pipeline {
         stage('Port Forwarding') {
             steps {
                 script {
+                    // Debugging: List Kubernetes pods
+                    bat '''
+                        echo Retrieving frontend pod:
+                        kubectl get pods -l app=frontend
+
+                        echo Retrieving backend pod:
+                        kubectl get pods -l app=backend
+                    '''
+
+                    // Set up port forwarding
                     bat '''
                         for /f "tokens=*" %%i in ('kubectl get pods -l app=frontend -o jsonpath="{.items[0].metadata.name}"') do set FRONTEND_POD=%%i
                         echo Frontend pod is %FRONTEND_POD%
@@ -121,8 +134,8 @@ pipeline {
         stage('Check log_analyzer.py File') {
             steps {
                 script {
-                    bat 'dir scripts'
-                    bat 'dir scripts\\log_analyzer.py'
+                    bat 'dir scripts' // List contents of the scripts directory
+                    bat 'dir scripts\\log_analyzer.py' // Check if log_analyzer.py exists
                 }
             }
         }
@@ -130,6 +143,7 @@ pipeline {
         stage('Run Log Analyzer') {
             steps {
                 script {
+                    // Ensure PYTHONPATH is set for the script execution
                     bat '''
                         call venv\\Scripts\\activate
                         set PYTHONPATH=%WORKSPACE%
