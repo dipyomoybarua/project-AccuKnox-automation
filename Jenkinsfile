@@ -21,7 +21,6 @@ pipeline {
                         call venv\\Scripts\\activate
                         pip install --upgrade pip
                         pip install -r requirements.txt
-                        pip install pyautogui pyscreeze
                     '''
                 }
             }
@@ -38,10 +37,10 @@ pipeline {
         stage('Set File Permissions') {
             steps {
                 script {
-                    // Set read permissions for Everyone on the deployment files
+                    // Update path to match the Jenkins workspace
                     bat '''
-                        icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\backend-deployment.yaml" /grant Everyone:(R)
-                        icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\frontend-deployment.yaml" /grant Everyone:(R)
+                        icacls "%WORKSPACE%\\Deployment\\backend-deployment.yaml" /grant Everyone:(R)
+                        icacls "%WORKSPACE%\\Deployment\\frontend-deployment.yaml" /grant Everyone:(R)
                     '''
                 }
             }

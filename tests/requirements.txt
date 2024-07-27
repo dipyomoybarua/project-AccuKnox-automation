@@ -5,3 +5,4 @@ pytest-xdist
 coverage
 retrying
 pyautogui
+pyscreeze
