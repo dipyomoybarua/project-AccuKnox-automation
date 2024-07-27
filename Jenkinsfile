@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GITHUB_CREDENTIALS = 'github-credentials-id'
-        PYTHONPATH = "${env.WORKSPACE}" // Ensure PYTHONPATH includes the workspace directory
+        PYTHONPATH = "${env.WORKSPACE}"
     }
 
     stages {
@@ -23,7 +23,7 @@ pipeline {
                         pip install -r requirements.txt
                         pip show pyautogui
                         pip show pyscreeze
-                        pip show pillow
+                        pip show pillow || echo Pillow not installed
                     '''
                 }
             }
@@ -32,7 +32,7 @@ pipeline {
         stage('Verify Deployment Directory') {
             steps {
                 dir('Deployment') {
-                    bat 'dir' // Lists contents of the Deployment directory
+                    bat 'dir'
                 }
             }
         }
@@ -40,10 +40,9 @@ pipeline {
         stage('Set File Permissions') {
             steps {
                 script {
-                    // Set read permissions for Everyone on the deployment files
                     bat '''
-                        icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\backend-deployment.yaml" /grant Everyone:(R)
-                        icacls "C:\\Users\\Dell\\.jenkins\\workspace\\MyPythonAutomationProject\\Deployment\\frontend-deployment.yaml" /grant Everyone:(R)
+                        icacls "Deployment\\backend-deployment.yaml" /grant Everyone:(R)
+                        icacls "Deployment\\frontend-deployment.yaml" /grant Everyone:(R)
                     '''
                 }
             }
@@ -51,7 +50,7 @@ pipeline {
 
         stage('Workspace Path') {
             steps {
-                bat 'echo %WORKSPACE%' // Prints the workspace path
+                bat 'echo %WORKSPACE%'
             }
         }
 
@@ -71,7 +70,6 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Debugging: List directory contents
                     bat '''
                         echo Checking contents of the workspace directory:
                         dir
@@ -79,7 +77,6 @@ pipeline {
                         dir Deployment
                     '''
 
-                    // Check if the Deployment directory exists and contains valid files
                     if (fileExists('Deployment/backend-deployment.yaml') && fileExists('Deployment/frontend-deployment.yaml')) {
                         bat '''
                             echo Applying Kubernetes manifests:
@@ -95,7 +92,6 @@ pipeline {
         stage('Port Forwarding') {
             steps {
                 script {
-                    // Debugging: List Kubernetes pods
                     bat '''
                         echo Retrieving frontend pod:
                         kubectl get pods -l app=frontend
@@ -134,8 +130,8 @@ pipeline {
         stage('Check log_analyzer.py File') {
             steps {
                 script {
-                    bat 'dir scripts' // List contents of the scripts directory
-                    bat 'dir scripts\\log_analyzer.py' // Check if log_analyzer.py exists
+                    bat 'dir scripts'
+                    bat 'dir scripts\\log_analyzer.py'
                 }
             }
         }
@@ -143,7 +139,6 @@ pipeline {
         stage('Run Log Analyzer') {
             steps {
                 script {
-                    // Ensure PYTHONPATH is set for the script execution
                     bat '''
                         call venv\\Scripts\\activate
                         set PYTHONPATH=%WORKSPACE%

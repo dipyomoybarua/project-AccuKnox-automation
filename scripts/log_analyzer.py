@@ -12,7 +12,7 @@ def fetch_log(log_url):
         log_content = response.text
         if not log_content.strip():  # Check if the content is empty or whitespace
             print("No logs found in the URL.")
-            take_screenshot("no_logs_found.png")
+            take_screenshot("logs_screenshot.png")
             return []
         return log_content.splitlines()
     except requests.exceptions.RequestException as e:
