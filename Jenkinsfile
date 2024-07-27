@@ -21,9 +21,6 @@ pipeline {
                         call venv\\Scripts\\activate
                         pip install --upgrade pip
                         pip install -r requirements.txt
-                        pip show pyautogui
-                        pip show pyscreeze
-                        pip show pillow || echo Pillow not installed
                     '''
                 }
             }
