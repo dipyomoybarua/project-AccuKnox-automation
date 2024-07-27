@@ -41,7 +41,6 @@ pipeline {
                     bat '''
                         icacls "Deployment\\backend-deployment.yaml" /grant Users:(R)
                         icacls "Deployment\\frontend-deployment.yaml" /grant Users:(R)
-
                     '''
                 }
             }
@@ -61,6 +60,19 @@ pipeline {
                         echo Directory created
                     ) else (
                         echo Directory already exists
+                    )
+                '''
+            }
+        }
+
+        stage('Ensure Screenshots Directory') {
+            steps {
+                bat '''
+                    if not exist screenshots (
+                        mkdir screenshots
+                        echo Screenshots directory created
+                    ) else (
+                        echo Screenshots directory already exists
                     )
                 '''
             }

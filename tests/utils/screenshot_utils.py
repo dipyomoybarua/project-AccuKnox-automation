@@ -3,12 +3,11 @@ import datetime
 import os
 
 def take_screenshot(file_name_prefix, directory="screenshots"):
-    # Create a timestamp for the screenshot file name
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = f"{file_name_prefix}_{timestamp}.png"
     file_path = os.path.join(directory, file_name)
 
-    # Create the directory if it doesn't exist
+    # Ensure the directory exists
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -21,3 +20,7 @@ def take_screenshot(file_name_prefix, directory="screenshots"):
         print(f"Failed to take screenshot: {e}")
 
     return file_path
+
+# Ensure that the screenshots directory is created when the script runs
+if not os.path.exists("screenshots"):
+    os.makedirs("screenshots")
