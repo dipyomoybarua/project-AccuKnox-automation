@@ -4,6 +4,4 @@ pytest-html
 pytest-xdist
 coverage
 retrying
-# pyautogui
-# pyscreeze
 mss
