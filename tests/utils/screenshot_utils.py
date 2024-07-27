@@ -11,7 +11,12 @@ def take_screenshot(file_name_prefix):
     if not os.path.exists("screenshots"):
         os.makedirs("screenshots")
 
-    # Take screenshot and save it
-    screenshot = pyautogui.screenshot()
-    screenshot.save(file_path)
-    print(f"Screenshot saved as {file_path}")
+    try:
+        # Take screenshot and save it
+        screenshot = pyautogui.screenshot()
+        screenshot.save(file_path)
+        print(f"Screenshot saved as {file_path}")
+    except Exception as e:
+        print(f"Failed to take screenshot: {e}")
+
+    return file_path
