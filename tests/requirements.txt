@@ -6,6 +6,6 @@ coverage
 retrying
 pyautogui
 pyscreeze
-pillow==10.4.0
 pyautogui==0.9.53
 pyscreeze==0.1.28
+pillow==10.4.0
