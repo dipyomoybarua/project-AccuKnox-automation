@@ -22,6 +22,11 @@ Our project is neatly organized into folders for clarity:
 - `tests/`: This is the one-stop folder for all testing scripts. It also contains helper utilities.
 - `scripts/`: Contains scripts for the tasks, which includes the log analyzer.
 
+## Understanding Fixtures and Utilities
+
+- `tests/fixtures/`: This folder contains fixture files. It includes all kind of URLs that have been used in the project. These file used to run the test files.
+- `tests/utils/`: This folder includes utility files. These files provide common functions. These functions are used across tests.
+
 ## Kickstarting the Project
 
 ### Grabbing the Code
