@@ -1,6 +1,6 @@
 # Overview of the QA Test Automation Project
 
-We're diving into an exciting project that showcases how to seamlessly integrate and deploy both frontend and backend services onto the Kubernetes platform. But that's not all— we're also automating the testing process to ensure everything works together smoothly.
+Get into exciting journey with me as we seamlessly integrate and deploy both frontend and backend services onto the Kubernetes platform. But that’s not all. We're also automating the testing process. This ensures everything works together smoothly.
 
 ## Getting Started: What You'll Need
 
@@ -20,7 +20,7 @@ Our project is neatly organized into folders for clarity:
 - `Deployment/`: This is home to the Kubernetes deployment configurations.
 - `frontend/`: Everything client-facing lives here. The user interface components are developed in this folder.
 - `tests/`: This is the one-stop folder for all testing scripts. It also contains helper utilities.
-- `scripts/`: Contains scripts for various tasks, including the log analyzer.
+- `scripts/`: Contains scripts for the tasks, which includes the log analyzer.
 
 ## Kickstarting the Project
 
