@@ -125,39 +125,34 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                script {
-                    bat '''
-                        call venv\\Scripts\\activate
-                        set PYTHONPATH=%WORKSPACE%
-                        echo Running tests:
-                        cd %WORKSPACE%
-                        python -m pytest -s -v --tb=short
-                    '''
+        stage('Parallel Tasks') {
+            parallel {
+                stage('Run All Tests') {
+                    steps {
+                        script {
+                            bat '''
+                                call venv\\Scripts\\activate
+                                set PYTHONPATH=%WORKSPACE%
+                                echo Running all tests:
+                                cd %WORKSPACE%
+                                python -m pytest -s -v --tb=short
+                            '''
+                        }
+                    }
                 }
-            }
-        }
 
-        stage('Check log_analyzer.py File') {
-            steps {
-                script {
-                    bat 'dir scripts'
-                    bat 'dir scripts\\log_analyzer.py'
-                }
-            }
-        }
-
-        stage('Run Log Analyzer') {
-            steps {
-                script {
-                    bat '''
-                        call venv\\Scripts\\activate
-                        set PYTHONPATH=%WORKSPACE%
-                        echo Running log analyzer:
-                        cd %WORKSPACE%
-                        python scripts\\log_analyzer.py
-                    '''
+                stage('Run Log Analyzer') {
+                    steps {
+                        script {
+                            bat '''
+                                call venv\\Scripts\\activate
+                                set PYTHONPATH=%WORKSPACE%
+                                echo Running log analyzer:
+                                cd %WORKSPACE%
+                                python scripts\\log_analyzer.py
+                            '''
+                        }
+                    }
                 }
             }
         }
